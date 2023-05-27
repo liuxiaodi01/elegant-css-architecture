@@ -1,0 +1,79 @@
+// bg-primary
+// text-primary
+@each $colorKey, $color in $colors {
+  [text-#{$colorKey}] {
+    color: $color;
+  }
+  [bg-#{$colorKey}] {
+    background-color: $color;
+  }
+}
+// text-left  text-center text-right
+@each $var in (left, center, right) {
+  [text-#{$var}] {
+    text-align: $var !important;
+  }
+}
+
+//  fs-xxs fs-xs fs-sm fs-md fs-lg fs-xl
+@each $sizeKey, $size in $font-sizes {
+  [fs-#{$sizeKey}] {
+    font-size: $size * $base-font-size;
+  }
+}
+[w-100] {
+  width: 100%;
+}
+[h-100] {
+  height: 100%;
+}
+// flex 布局
+// jc-center jc-start jc-end jc-between jc-around
+@each $key, $value in $flex-jc {
+  [jc-#{$key}] {
+    justify-content: $value;
+  }
+}
+// ai-start ai-end ai-center ai-stretch
+@each $key, $value in $flex-ai {
+  .ai-#{$key} {
+    align-items: $value;
+  }
+}
+[flex-1] {
+  flex: 1;
+}
+// m-0, mx-0 p-0 px-0
+@each $typeKey, $type in $spacing-types {
+  // m-1 p-1 ...
+  @each $sizeKey, $size in $spacing-sizes {
+    [#{$typeKey}-#{$sizeKey}] {
+      #{$type}: $size * $spacing-base-size;
+    }
+  }
+  // mx-1 , my-1 px-1 py-1 ...
+  @each $sizeKey, $size in $spacing-sizes {
+    [#{$typeKey}x-#{$sizeKey}] {
+      #{$type}-left: $size * $spacing-base-size;
+      #{$type}-right: $size * $spacing-base-size;
+    }
+    [#{$typeKey}y-#{$sizeKey}] {
+      #{$type}-top: $size * $spacing-base-size;
+      #{$type}-bottom: $size * $spacing-base-size;
+    }
+  }
+  // mt-1 pt-1 ...
+  @each $directionKey, $direction in $spacing-directions {
+    @each $sizeKey, $size in $spacing-sizes {
+      [#{$typeKey}#{$directionKey}-#{$sizeKey}] {
+        #{$type}-#{$direction}: $size * $spacing-base-size;
+      }
+    }
+  }
+}
+// border-top ...
+@each $dir in (top, right, bottom, left) {
+  [border-#{$dir}] {
+    border-#{$dir}: 1px solid $border-color;
+  }
+}
