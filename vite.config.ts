@@ -1,5 +1,4 @@
 import { fileURLToPath, URL } from "node:url";
-
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import vueJsx from "@vitejs/plugin-vue-jsx";
@@ -15,7 +14,7 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: `@import "@/styles/settings/_variable.scss";@import "@/styles/tools/_sassMagic.scss";`,
+        additionalData: `@import "@/styles/tools/_sassMagic.scss";@import "@/styles/theme/scss/_handle.scss";`,
       },
     },
   },

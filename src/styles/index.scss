@@ -1,1 +1,11 @@
+// acss 通用样式
 @import "./acss/bootstrap.scss";
+
+// 主题 方式一
+@import "./theme/css/default.scss";
+@import "./theme/css/cool.scss";
+@import "./theme/css/dark.scss";
+@import "./theme/css/warn.scss";
+
+// 使用方式
+// 在vue页面针对类名去添加换肤

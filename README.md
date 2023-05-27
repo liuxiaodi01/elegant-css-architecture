@@ -118,3 +118,160 @@ module.exports = defineConfig({
 <div fl></div>
 [fl]{ background:pink }
 ```
+
+### Theme 层代码实现
+
+#### 将 data-theme 放置到 html 标签上
+
+##### 方式一
+
+- 通过 JS 更改 data-theme 属性进行切换改变样式
+- 在 app.vue 中可以通过 JS 注入属性
+
+```js
+window.document.documentElement.setAttribute("data-theme", "cool");
+```
+
+```css
+// styles/index.scss
+// 主题
+@import "./theme/css/default.scss";
+@import "./theme/css/cool.scss";
+@import "./theme/css/dark.scss";
+@import "./theme/css/warn.scss";
+```
+
+```css
+// default.scss
+[data-theme="defalut"] .text {
+  color: #409eff;
+}
+[data-theme="defalut"] .box {
+  background: #409eff;
+}
+[data-theme="defalut"] .box-item-text {
+  color: #409eff;
+}
+[data-theme="defalut"] .box-item-text {
+  background: #409eff;
+}
+```
+
+```css
+// cool.scss
+[data-theme="cool"] .text {
+  color: #f56c6c;
+}
+[data-theme="cool"] .box {
+  background: #f56c6c;
+}
+//  针对性换肤
+[data-theme="cool"] .box-item-text {
+  color: #e6a23c;
+}
+[data-theme="cool"] .box-item-text {
+  background: #e6a23c;
+}
+```
+
+```vue
+<template>
+  <div class="box">
+    <div class="text"></div>
+  </div>
+  <div class="box-item-text">asdads</div>
+</template>
+<script>
+import { onMounted } from "vue";
+export default {
+  setup() {
+    onMounted(() => {
+      window.document.documentElement.setAttribute("data-theme", "coo1");
+    });
+  },
+};
+</script>
+<style></style>
+```
+
+##### 方式二
+
+```scss
+// theme/scss/_theme.scss
+$data-theme: (
+  defalut: (
+    text-color: #409eff,
+    bg-color: #409eff,
+  ),
+  cool: (
+    text-color: #f56c6c,
+    bg-color: #f56c6c,
+  ),
+  warn: (
+    text-color: #e6a23c,
+    bg-color: #e6a23c,
+  ),
+  dark: (
+    text-color: #303133,
+    bg-color: #000000,
+  ),
+);
+// _handle.scss
+@mixin themeify {
+  @each $theme-name, $theme-map in $data-theme {
+    $theme-map: $theme-map !global;
+    //判断html的data-theme的属性值  #{}是sass的插值表达式
+    [data-theme="#{$theme-name}"] & {
+      @content;
+    }
+  }
+}
+@function themed($key) {
+  @return map-get($theme-map, $key);
+}
+```
+
+```vue
+<template>
+  <div class="app-wrapper">qweqweqwe</div>
+</template>
+<script setup lang="ts">
+import { onMounted } from "vue";
+onMounted(() => {
+  document.documentElement.setAttribute("data-theme", "cool");
+});
+</script>
+<style scoped lang="scss">
+@include b(app-wrapper) {
+  @include themeify {
+    color: themed(text-color);
+  }
+}
+</style>
+```
+
+```js
+import { fileURLToPath, URL } from "node:url";
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
+import vueJsx from "@vitejs/plugin-vue-jsx";
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [vue(), vueJsx()],
+  resolve: {
+    alias: {
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
+    },
+  },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: `@import "@/styles/settings/_variable.scss";@import "@/styles/tools/_sassMagic.scss";@import "@/styles/theme/scss/theme.scss";`,
+      },
+    },
+  },
+});
+```
+
+...
